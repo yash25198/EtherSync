@@ -1,13 +1,25 @@
-# Sample Hardhat Project
+# EtherSyncurai 
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Syncs the Ethereum mainnet to a local hardhat node for fast querying and regtest development.
+ ## Setup
 
-Try running some of the following tasks:
+ env file
+ ```
+ FORKING_URL=/** mainnet rpc url **/
+ FORKING_BLOCK_NUMBER=/** block number to fork from ,empty -> latest**/
+ ```
 
+## Usage
+
+# terminal 1
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat run scripts/deploy.ts
 ```
+# terminal 2
+```shell
+npx hardhat run scripts/worker.ts
+```
+
+## TODO
+- [ ] timestamp of block => currenly all transactions done to contracts using block.timestamp fail
+- [ ] bundle transactions into same block as mainnet => currently transactions are mined 1 per block
