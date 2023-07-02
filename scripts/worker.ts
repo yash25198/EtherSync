@@ -17,6 +17,7 @@ class Worker {
             blockNumber,
             true
         )) as Block;
+        await ethers.provider.send("evm_setAutomine", [false]);
         for (let index = 0; index < block.transactions.length; index++) {
             let sourceTx = block.getPrefetchedTransaction(index);
             process.stdout.cursorTo(0);
@@ -57,6 +58,8 @@ class Worker {
                 console.log(`Failed transaction: ${sourceTx.hash}`);
             }
         }
+        await ethers.provider.send("evm_mine", []);
+        await ethers.provider.send("evm_setAutomine", [true]);
     }
     private sendTransation(raw: string) {
         return new Promise((resolve, reject) => {
