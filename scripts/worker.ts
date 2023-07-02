@@ -17,12 +17,18 @@ class Worker {
             blockNumber,
             true
         )) as Block;
+        //set timetamp to current block
+        await ethers.provider.send("evm_setNextBlockTimestamp", [
+            block.timestamp,
+        ]);
         await ethers.provider.send("evm_setAutomine", [false]);
         for (let index = 0; index < block.transactions.length; index++) {
             let sourceTx = block.getPrefetchedTransaction(index);
             process.stdout.cursorTo(0);
             process.stdout.write(
-                `Block: ${blockNumber} | tx ${index}/${block?.prefetchedTransactions.length}`
+                `Block: ${blockNumber} | tx ${index + 1}/${
+                    block?.prefetchedTransactions.length
+                }`
             );
 
             let localTx = {
@@ -50,10 +56,10 @@ class Worker {
                 localTx.gasPrice = sourceTx.maxFeePerGas?.toString();
             }
 
-            let raw = serialize(localTx, sourceTx.signature);
+            let rawTx = serialize(localTx, sourceTx.signature);
 
             try {
-                await this.sendTransation(raw);
+                await this.sendTransation(rawTx);
             } catch (e) {
                 console.log(`Failed transaction: ${sourceTx.hash}`);
             }
@@ -85,7 +91,7 @@ async function main() {
     );
     const chainID = await mainnetProvider.send("eth_chainId", []);
     const worker = new Worker(mainnetProvider, Number(chainID));
-    await worker.start(forkingBlock + 1);
+    await worker.start(forkingBlock + 2);
 }
 
 main().catch((e) => {
