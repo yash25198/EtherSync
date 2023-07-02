@@ -17,7 +17,7 @@ npx hardhat node
 ```
 # terminal 2
 ```shell
-npx hardhat run scripts/worker.ts
+npx hardhat run scripts/worker.ts --network localhost
 ```
 
 ## TODO
